@@ -1,0 +1,57 @@
+# Filename: databricks.yml
+bundle:
+  name: test
+
+variables:
+  job_prefix:
+    description: A unifying prefix for this bundle's job and task names.
+    default: test
+  spark_version:
+    description: The cluster's Spark version ID.
+    default: 13.3.x-cpu-ml-scala2.12
+  node_type_id:
+    description: The cluster's node type ID.
+    default: Standard_DS3_v2
+
+artifacts:
+  dabdemo-wheel:
+    type: whl
+    path: ./Libraries/python/dabdemo
+
+resources:
+  jobs:
+    run-unit-tests:
+      name: ${var.job_prefix}-run-unit-tests
+      tasks:
+        - task_key: ${var.job_prefix}-run-unit-tests-task
+          new_cluster:
+            spark_version: ${var.spark_version}
+            node_type_id: ${var.node_type_id}
+            num_workers: 1
+            spark_env_vars:
+              WORKSPACEBUNDLEPATH: ${workspace.root_path}
+          notebook_task:
+            notebook_path: ./run_unit_tests.py
+            source: WORKSPACE
+          libraries:
+            - pypi:
+                package: pytest
+    run-dabdemo-notebook:
+      name: ${var.job_prefix}-run-dabdemo-notebook
+      tasks:
+        - task_key: ${var.job_prefix}-run-dabdemo-notebook-task
+          new_cluster:
+            spark_version: ${var.spark_version}
+            node_type_id: ${var.node_type_id}
+            num_workers: 1
+            spark_env_vars:
+              WORKSPACEBUNDLEPATH: ${workspace.root_path}
+          notebook_task:
+            notebook_path: ./dabdemo_notebook.py
+            source: WORKSPACE
+          libraries:
+            - whl: "/Workspace${workspace.root_path}/files/Libraries/python/dabdemo/dist/dabdemo-0.0.1-py3-none-any.whl"
+
+targets:
+  dev:
+    mode: development

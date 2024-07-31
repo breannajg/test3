@@ -1,0 +1,50 @@
+# Specify the trigger event to start the build pipeline.
+# In this case, new code merged into the release branch initiates a new build.
+trigger:
+- v1
+
+# Specify the operating system for the agent that runs on the Azure virtual
+# machine for the build pipeline (known as the build agent). The virtual
+# machine image in this example uses the Ubuntu 22.04 virtual machine
+# image in the Azure Pipeline agent pool. See
+# https://learn.microsoft.com/azure/devops/pipelines/agents/hosted#software
+pool:
+  vmImage: ubuntu-22.04
+
+# Download the files from the designated branch in the remote Git repository
+# onto the build agent.
+steps:
+- checkout: self
+  persistCredentials: true
+  clean: true
+
+# Generate the deployment artifact. To do this, the build agent gathers
+# all the new or updated code to be given to the release pipeline,
+# including the sample Python code, the Python notebooks,
+# the Python wheel library component files, and the related Databricks asset
+# bundle settings.
+# Use git diff to flag files that were added in the most recent Git merge.
+# Then add the files to be used by the release pipeline.
+# The implementation in your pipeline will likely be different.
+# The objective here is to add all files intended for the current release.
+- script: |
+    git diff --name-only --diff-filter=AMR HEAD^1 HEAD | xargs -I '{}' cp --parents -r '{}' $(Build.BinariesDirectory)
+    mkdir -p $(Build.BinariesDirectory)/Libraries/python/dabdemo/dabdemo
+    cp $(Build.Repository.LocalPath)/Libraries/python/dabdemo/dabdemo/*.* $(Build.BinariesDirectory)/Libraries/python/dabdemo/dabdemo
+    cp $(Build.Repository.LocalPath)/Libraries/python/dabdemo/setup.py $(Build.BinariesDirectory)/Libraries/python/dabdemo
+    cp $(Build.Repository.LocalPath)/*.* $(Build.BinariesDirectory)
+  displayName: 'Get Changes'
+
+# Create the deployment artifact and then publish it to the
+# artifact repository.
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    ArtifactName: 'DatabricksBuild'

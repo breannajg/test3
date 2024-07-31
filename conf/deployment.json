@@ -1,0 +1,155 @@
+{
+    "deployProd": {
+        "name": "bg_cicd_template_test2",
+        "tasks": [
+            {
+                "task_key": "score",
+                "depends_on": [],
+                "new_cluster": {
+                    "spark_version": "8.4.x-cpu-ml-scala2.12",
+                    "policy_id": "60610A1F34000213",
+                    "custom_tags": {
+                        "costcenter": "0912"
+                    }
+                },
+                "libraries": [],
+                "max_retries": 4,
+                "retry_on_timeout": true,
+                "timeout_seconds": 3600,
+                "max_concurrent_runs": 1,
+                "notebook_task": {
+                    "notebook_path": "/Repos/Production/bg_cicd_template_test2/bg_cicd_template_test2/jobs/score",
+                    "base_parameters": {
+                        "target_db": "ECW_URL"
+                    }
+                }
+            }
+        ],
+        "email_notifications": {
+            "on_start": [],
+            "on_success": [],
+            "on_failure": []
+        },
+        "format": "MULTI_TASK",
+        "access_control_list": [
+            {
+                "service_principal_name": "73c5e4b2-ba21-498d-816d-ba782df4b375",
+                "permission_level": "IS_OWNER"
+            },
+            {
+                "group_name": "AZ_DtbrkAdmn44_P",
+                "permission_level": "CAN_MANAGE"
+            },
+            {
+                "group_name": "AZ_DtbrkDSCoEMLEng44_P",
+                "permission_level": "CAN_MANAGE_RUN"
+            },
+            {
+                "group_name": "AZ_DtbrkDSCoEdtScntst44_P",
+                "permission_level": "CAN_VIEW"
+            }
+        ]
+    },
+    "deployDR": {
+        "name": "bg_cicd_template_test2",
+        "tasks": [
+            {
+                "task_key": "score",
+                "depends_on": [],
+                "new_cluster": {
+                    "spark_version": "8.4.x-cpu-ml-scala2.12",
+                    "policy_id": "D0610CAEDF000094",
+                    "custom_tags": {
+                        "costcenter": "0912"
+                    }
+                },
+                "libraries": [],
+                "max_retries": 4,
+                "retry_on_timeout": true,
+                "timeout_seconds": 3600,
+                "max_concurrent_runs": 1,
+                "notebook_task": {
+                    "notebook_path": "/Repos/Production/bg_cicd_template_test2/bg_cicd_template_test2/jobs/score",
+                    "base_parameters": {
+                        "target_db": "ECW_URL"
+                    }
+                }
+            }
+        ],
+        "email_notifications": {
+            "on_start": [],
+            "on_success": [],
+            "on_failure": []
+        },
+        "format": "MULTI_TASK",
+        "access_control_list": [
+            {
+                "service_principal_name": "73c5e4b2-ba21-498d-816d-ba782df4b375",
+                "permission_level": "IS_OWNER"
+            },
+            {
+                "group_name": "AZ_DtbrkAdmn44_P",
+                "permission_level": "CAN_MANAGE"
+            },
+            {
+                "group_name": "AZ_DtbrkDSCoEMLEng44_P",
+                "permission_level": "CAN_MANAGE_RUN"
+            },
+            {
+                "group_name": "AZ_DtbrkDSCoEdtScntst44_P",
+                "permission_level": "CAN_VIEW"
+            }
+        ]
+    },
+    "integrationTest": {
+        "name": "bg_cicd_template_test2-integration-test",
+        "tasks": [
+            {
+                "task_key": "score",
+                "depends_on": [],
+                "new_cluster": {
+                    "spark_version": "8.4.x-cpu-ml-scala2.12",
+                    "policy_id": "60610A1F34000213",
+                    "custom_tags": {
+                        "costcenter": "0912"
+                    }
+                },
+                "libraries": [],
+                "max_retries": 4,
+                "retry_on_timeout": true,
+                "timeout_seconds": 3600,
+                "max_concurrent_runs": 1,
+                "notebook_task": {
+                    "notebook_path": "/Repos/Staging/bg_cicd_template_test2/bg_cicd_template_test2/jobs/score",
+                    "base_parameters": {
+                        "target_db": "ECW_DEV_URL"
+                    }
+                }
+            }
+        ],
+        "email_notifications": {
+            "on_start": [],
+            "on_success": [],
+            "on_failure": []
+        },
+        "format": "MULTI_TASK",
+        "access_control_list": [
+            {
+                "service_principal_name": "73c5e4b2-ba21-498d-816d-ba782df4b375",
+                "permission_level": "IS_OWNER"
+            },
+            {
+                "group_name": "AZ_DtbrkAdmn44_P",
+                "permission_level": "CAN_MANAGE"
+            },
+            {
+                "group_name": "AZ_DtbrkDSCoEMLEng44_P",
+                "permission_level": "CAN_MANAGE_RUN"
+            },
+            {
+                "group_name": "AZ_DtbrkDSCoEdtScntst44_P",
+                "permission_level": "CAN_VIEW"
+            }
+        ]
+    }
+}
